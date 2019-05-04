@@ -85,7 +85,7 @@ class Crypto extends Component {
         <Table.Cell>
           <Button
             onClick={() => this.props.handleHistoricalPost(this.props.ticker)}
-            icon="heart"
+            icon="dollar"
           />
         </Table.Cell>
       </Table.Row>

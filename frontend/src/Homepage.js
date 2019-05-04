@@ -58,22 +58,6 @@ class Homepage extends Component {
           newsList: newsData
         });
       });
-    // fetch("http://localhost:5000/coinlist")
-    //   .then(response => {
-    //     return response.json();
-    //   })
-    //   .then(coinList => {
-    //     return this.setState({
-    //       coinList: coinList
-    //     });
-    //   });
-
-    // const { endpoint } = this.state;
-    // const socket = io(endpoint);
-    // socket.on("FromAPI", data => this.setState({ response: data }));
-    // this.callApi()
-    //   .then(res => this.setState({ response: res.express }))
-    //   .catch(err => console.log(err));
   }
 
   showDetails = itemId => {
@@ -145,6 +129,14 @@ class Homepage extends Component {
       histFour: this.state.histThree,
       histFive: this.state.histFour,
       histSix: this.state.histFive
+    });
+  };
+
+  toggleDetails = () => {
+    // console.log("dhowing Details page");
+    this.setState({
+      // detailsPage: !this.state.detailsPage
+      clickedCrypto: null
     });
   };
 
@@ -227,6 +219,7 @@ class Homepage extends Component {
           <CryptoDash
             news={this.state.newsList}
             clickedCrypto={this.state.clickedCrypto}
+            toggleDetails={this.toggleDetails}
           />
         )}
       </div>

@@ -7,7 +7,7 @@ const Search = props => {
       <input
         onChange={props.handleChange}
         type="text"
-        placeholder={"Search your Recent Transactions"}
+        placeholder={"Search your Cryptos"}
         value={props.inputValue}
       />
       <i className="circular search link icon" />

@@ -12,15 +12,15 @@ import {
   List
 } from "semantic-ui-react";
 import CryptoDetails from "./CryptoDetails";
-import CryptoChartDash from "./CryptoChartDash";
+// import CryptoChartDash from "./CryptoChartDash";
 
 class CryptoDash extends Component {
   state = {
     response: "",
     post: "",
-    responseToPost: "",
+    responseToPost: ""
     // historicals: [],
-    chartHide: true
+    // chartHide: true
   };
 
   // handleClickPost = async () => {
@@ -39,14 +39,14 @@ class CryptoDash extends Component {
   //   });
   // };
 
-  toggleChartHide = () => {
-    console.log("Where you be Hiding Form");
-    return this.setState({ chartHide: false });
-  };
+  // toggleChartHide = () => {
+  //   console.log("Where you be Hiding Form");
+  //   return this.setState({ chartHide: false });
+  // };
 
   doubleClick = () => {
     this.handleClickPost();
-    this.toggleChartHide();
+    // this.toggleChartHide();
   };
 
   render() {
@@ -61,26 +61,24 @@ class CryptoDash extends Component {
     return (
       <div>
         <Container style={{ padding: "5em 0em" }}>
-          {this.state.chartHide ? (
-            <div>
-              {/* <Button onClick={() => this.doubleClick()}>
-                Historical Price
-              </Button> */}
+          {/* {this.state.chartHide ? ( */}
+          <div>
+            <Button onClick={() => this.props.toggleDetails()}>Close</Button>
 
-              <CryptoDetails
-                filteredNews={this.props.news.filter(article => {
-                  return article.mentions === this.props.clickedCrypto.ticker;
-                })}
-                clickedCrypto={this.props.clickedCrypto}
-                // historicals={this.state.historicals}
-              />
-            </div>
-          ) : (
-            <CryptoChartDash
+            <CryptoDetails
+              filteredNews={this.props.news.filter(article => {
+                return article.mentions === this.props.clickedCrypto.ticker;
+              })}
               clickedCrypto={this.props.clickedCrypto}
               // historicals={this.state.historicals}
             />
-          )}
+          </div>
+          {/* ) : ( */}
+          {/* <CryptoChartDash
+            clickedCrypto={this.props.clickedCrypto}
+            // historicals={this.state.historicals}
+          /> */}
+          {/* )} */}
         </Container>
       </div>
     );

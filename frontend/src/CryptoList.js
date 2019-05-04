@@ -30,7 +30,7 @@ const CryptoList = props => {
           <Table.HeaderCell>24H Change ($)</Table.HeaderCell>
           <Table.HeaderCell>Market Cap</Table.HeaderCell>
           {/* <Table.HeaderCell>Total Supply</Table.HeaderCell> */}
-          <Table.HeaderCell>Add to Favorites</Table.HeaderCell>
+          <Table.HeaderCell>Price Chart</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
 
