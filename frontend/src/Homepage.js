@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import CryptoList from "./CryptoList";
 import CryptoDash from "./CryptoDash";
-import Favorites from "./Favorites";
+// import Favorites from "./Favorites";
 import Search from "./Search";
 import io from "socket.io-client";
-// import Profile from "./Profile";
+import WeeklyCharts from "./WeeklyCharts";
 
 import {
   Menu,
@@ -21,6 +21,13 @@ import {
 class Homepage extends Component {
   state = {
     coinList: [],
+    histOne: [],
+    histTwo: [],
+    histThree: [],
+    histFour: [],
+    histFive: [],
+    histSix: [],
+    priorCoinList: [],
     newsList: [],
     coinDetails: [],
     coins: [],
@@ -33,7 +40,7 @@ class Homepage extends Component {
   };
 
   componentDidMount() {
-    fetch("http://localhost:5000/allcoins")
+    fetch("http://localhost:5000/api/allcoins")
       .then(response => {
         return response.json();
       })
@@ -42,7 +49,7 @@ class Homepage extends Component {
           coins: allCoins
         });
       });
-    fetch("http://localhost:5000/news")
+    fetch("http://localhost:5000/api/news")
       .then(response => {
         return response.json();
       })
@@ -110,23 +117,36 @@ class Homepage extends Component {
       );
     });
 
-  // deleteFav = itemId => {
-  //   const userFavorites = this.state.favorites.map(item => {
-  //     return item;
-  //   });
-  //   console.log("user weapons", userFavorites);
-  //   const deleteFav = userFavorites.find(item => item);
-  //   console.log("delete weapon", deleteFav);
-  //   const updateFav = this.state.favorites(item => {
-  //     return item.id !== itemId;
-  //   });
-  //   console.log("update Armory", updateFav);
-  //   if (deleteFav) {
-  //     this.setState({
-  //       favorites: updateFav
-  //     });
-  //   }
-  // };
+  handleHistoricalPost = async cryptoTicker => {
+    // e.preventDefault();
+    const response = await fetch("http://localhost:5000/api/historicals", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ post: cryptoTicker })
+    });
+    const body = await response.json();
+    console.log(body);
+    this.setState({
+      // historicals: body,
+      // histOne: body,
+      histOne: body.map((price, index) => {
+        return {
+          dayOne: price[0],
+          dayTwo: price[1],
+          dayThree: price[2],
+          dayFour: price[3],
+          dayFive: price[4]
+        };
+      }),
+      histTwo: this.state.histOne,
+      histThree: this.state.histTwo,
+      histFour: this.state.histThree,
+      histFive: this.state.histFour,
+      histSix: this.state.histFive
+    });
+  };
 
   getInitialState = () => {
     return {
@@ -139,14 +159,11 @@ class Homepage extends Component {
     this.socket.on("disconnect", this.disconnect);
     const { endpoint } = this.state;
     const socket = io(endpoint);
-    socket.on("FromAPI", data => this.setState({ coinList: data }));
+    socket.on("FromAPI", data =>
+      this.setState({ coinList: data, priorCoinList: this.state.coinList })
+    );
   }
 
-  // livePrice = () => {
-  //   const { endpoint } = this.state;
-  //   const socket = io(endpoint);
-  //   socket.on("FromAPI", data => this.setState({ response: data }));
-  // };
   connect = () => {
     // alert("Connected:" + this.socket.id);
     this.setState({ state: "connected" });
@@ -157,8 +174,8 @@ class Homepage extends Component {
     this.setState({ state: "disconnected" });
   };
   render() {
-    console.log("homepage coinList", this.state.coinList);
-    console.log("homepage coinPrice", this.state.response);
+    console.log("homepage", this.state);
+    // console.log("homepage coinPrice", this.state.response);
     return (
       <div>
         {!this.state.clickedCrypto ? (
@@ -171,26 +188,34 @@ class Homepage extends Component {
             <Segment raised>
               <Grid color="black" columns={2} textAlign="center">
                 <Grid.Row color="black">
-                  <Grid.Column width={13} color="black">
+                  <Grid.Column width={12} color="black">
                     <CryptoList
                       coinList={this.filterCryptos()}
                       showDetails={this.showDetails}
-                      addFav={this.addFav}
+                      handleHistoricalPost={this.handleHistoricalPost}
+
+                      // addFav={this.addFav}
                     />
                   </Grid.Column>
-                  {/* </Segment> */}
-
-                  {/* <Segment> */}
-                  {/* <Grid.Column width={3} color="black">
-                    <Favorites
+                  <Grid.Column width={4} color="black">
+                    {this.state.histOne.length === 0 ? (
+                      <Message color="blue">
+                        CLICK CRYPTO TO VIEW WEEKLY PRICE CHART
+                      </Message>
+                    ) : (
+                      <WeeklyCharts
+                        histOne={this.state.histOne}
+                        histTwo={this.state.histTwo}
+                        histThree={this.state.histThree}
+                        histFour={this.state.histFour}
+                        histFive={this.state.histFive}
+                        histSix={this.state.histSix}
+                      />
+                    )}
+                    {/* <Favorites
                       favorites={this.state.favorites}
                       showDetails={this.showDetails}
                     /> */}
-                  <Grid.Column width={3} color="black">
-                    <Favorites
-                      favorites={this.state.favorites}
-                      showDetails={this.showDetails}
-                    />
                   </Grid.Column>
                   {/* </Segment> */}
                 </Grid.Row>

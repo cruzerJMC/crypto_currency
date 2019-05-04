@@ -19,25 +19,25 @@ class CryptoDash extends Component {
     response: "",
     post: "",
     responseToPost: "",
-    historicals: [],
+    // historicals: [],
     chartHide: true
   };
 
-  handleClickPost = async () => {
-    // e.preventDefault();
-    const response = await fetch("http://localhost:5000/historical", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ post: this.props.clickedCrypto.ticker })
-    });
-    const body = await response.json();
-    console.log(body);
-    this.setState({
-      historicals: body
-    });
-  };
+  // handleClickPost = async () => {
+  //   // e.preventDefault();
+  //   const response = await fetch("http://localhost:5000/historical", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({ post: this.props.clickedCrypto.ticker })
+  //   });
+  //   const body = await response.json();
+  //   console.log(body);
+  //   this.setState({
+  //     historicals: body
+  //   });
+  // };
 
   toggleChartHide = () => {
     console.log("Where you be Hiding Form");
@@ -50,35 +50,35 @@ class CryptoDash extends Component {
   };
 
   render() {
-    const series1 = this.state.historicals.map(object => {
-      let date = object.date;
-      let price = object.close;
-      let lineObj = { [date]: price };
-      return lineObj;
-    });
-    console.log("Day", series1);
+    // const series1 = this.state.historicals.map(object => {
+    //   let date = object.date;
+    //   let price = object.close;
+    //   let lineObj = { [date]: price };
+    //   return lineObj;
+    // });
+    // console.log("Day", series1);
 
     return (
       <div>
         <Container style={{ padding: "5em 0em" }}>
           {this.state.chartHide ? (
             <div>
-              <Button onClick={() => this.doubleClick()}>
+              {/* <Button onClick={() => this.doubleClick()}>
                 Historical Price
-              </Button>
+              </Button> */}
 
               <CryptoDetails
                 filteredNews={this.props.news.filter(article => {
                   return article.mentions === this.props.clickedCrypto.ticker;
                 })}
                 clickedCrypto={this.props.clickedCrypto}
-                historicals={this.state.historicals}
+                // historicals={this.state.historicals}
               />
             </div>
           ) : (
             <CryptoChartDash
               clickedCrypto={this.props.clickedCrypto}
-              historicals={this.state.historicals}
+              // historicals={this.state.historicals}
             />
           )}
         </Container>

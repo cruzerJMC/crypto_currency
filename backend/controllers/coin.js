@@ -1,57 +1,35 @@
-const express = require("express");
-const router = express.Router();
-const bodyParser = require("body-parser");
-const app = express();
 const fetch = require("node-fetch");
-const morgan = require("morgan");
-const cors = require("cors");
-const moment = require("moment");
 const key = "fe278748eb49ae23227e6769d92ef40bde306a9f0c3d91513b3c09680189c717";
-const helmet = require("helmet");
-const securityTxt = require("express-security.txt");
+// const moment = require("moment");
 
-app.use(helmet());
-app.use(morgan("dev"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
-require("./routes")(app);
+exports.getAllCoins = async (req, res) => {
+  const ticker =
+    "BTC,ETH,EOS,LTC,XRP,BCH,ETC,OKB,NEO,ZEC,BNB,DASH,TRX,QTUM,XLM,BGG,HT,XMRADA,BSV,BZ,PAX,PPT,USDT,ENJ,OMG,ABT";
+  const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker}&tsyms=USD&api_key=${key}`;
+  let response = await fetch(url);
+  // console.log("response", response);
 
-//Import Routes
-// const newsRoutes = require("./routes/news");
-// const coinsRoutes = require("./routes/coins");
+  // only proceed once promise is resolved
+  let json = await response.json();
+  // console.log("JSON", json);
+  // only proceed once second promise is resolved
 
-// app.use("/news", newsRoutes.getNews);
-// app.use("/allcoins", coinsRoutes.getAllCoins);
-// app.use("/historical", coinsRoutes.getHistorical);
-// app.use("/coinlist", coinsRoutes.getCoinList);
+  const data = await json.DISPLAY;
+  // console.log("DATA", data);
 
-const port = process.env.PORT || 5000;
-const server = app.listen(port, () => console.log(`Listening on port ${port}`));
+  let newCoinArray = Object.entries(data);
+  // console.log("NEWCOIN", newCoinArray);
 
-//set up socket io via function and pass in server
-// let io = socket(server);
-const io = require("socket.io").listen(server);
-const connections = [];
-
-//listen for event connection when the browser connection is made
-io.sockets.on("connection", socket => {
-  socket.once("diconnect", () => {
-    connections.splice(connections.indexOf(socket), 1);
-    socket.disconnect();
-    console.log("disconnected: %s sockets remaining", connections.length);
+  let fullCoinData = await newCoinArray.map(object => {
+    let obj = Object.values(object);
+    let objTwo = obj[1].USD;
+    return { ticker: object[0], data: objTwo };
   });
-  connections.push(socket);
-  console.log(
-    "made socket connection: %s sockets connected",
-    socket.id,
-    connections.length
-  );
-  setInterval(() => getApiAndEmit(socket), 10000);
-});
+  res.send(fullCoinData);
+};
 
-const getApiAndEmit = async socket => {
-  const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=50&tsym=USD&api_key=${key}`;
+exports.getCoinList = async (req, res) => {
+  const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym=USD&api_key=${key}`;
 
   let response = await fetch(url);
   // console.log("response", response);
@@ -69,7 +47,7 @@ const getApiAndEmit = async socket => {
     // console.log(one);
     let two = Object.values(object.DISPLAY.USD);
     // let key = Object.keys(object.DISPLAY.USD);
-    // console.log("two", two);
+    // console.log("HI", key);
     let combined = one.concat(two);
     // console.log("HI", combined);
     return combined;
@@ -77,7 +55,7 @@ const getApiAndEmit = async socket => {
 
   // console.log("COMBO", combinedArray[0]);
 
-  let coinPrice = await combinedArray.map((object, index) => {
+  let coinListArray = await combinedArray.map((object, index) => {
     return {
       index: index,
       id: object[0],
@@ -117,5 +95,6 @@ const getApiAndEmit = async socket => {
       TOTALVOLUME24HTO: object[45]
     };
   });
-  socket.emit("FromAPI", coinPrice);
+  // console.log(coinListArray[0]);
+  res.send(coinListArray);
 };

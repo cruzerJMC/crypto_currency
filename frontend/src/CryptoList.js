@@ -1,5 +1,5 @@
 import React from "react";
-import CryptoMenu from "./CryptoMenu";
+import Crypto from "./Crypto";
 import {
   Menu,
   Icon,
@@ -36,11 +36,12 @@ const CryptoList = props => {
 
       <Table.Body>
         {props.coinList.map(currency => (
-          <CryptoMenu
+          <Crypto
             key={currency.id}
             {...currency}
             showDetails={props.showDetails}
-            addFav={props.addFav}
+            // addFav={props.addFav}
+            handleHistoricalPost={props.handleHistoricalPost}
           />
         ))}
       </Table.Body>

@@ -134,14 +134,14 @@ class App extends Component {
       `}
         </style>
         {/* <div className="App"> */}
-        <div className="ui raised segment">
-          <div className="ui segment violet inverted">
-            <Header color={"violet"} inverted as="h1">
-              CryptoCurrency Dashboard
-            </Header>
-            <Homepage />
-          </div>
+        {/* <div className="ui raised segment"> */}
+        <div className="ui segment violet inverted">
+          <Header color={"violet"} inverted as="h1">
+            CryptoCurrency Dashboard
+          </Header>
+          <Homepage />
         </div>
+        {/* </div> */}
       </div>
 
       //       {/* <Segment>
